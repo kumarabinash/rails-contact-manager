@@ -15,6 +15,9 @@ gem 'coffee-rails', '~> 4.1.0'
 # gem 'therubyracer', platforms: :ruby
 
 
+group :development, :test do
+	gem 'capybara'
+end
 #Rspec for testing
 gem 'rspec-rails'
 
