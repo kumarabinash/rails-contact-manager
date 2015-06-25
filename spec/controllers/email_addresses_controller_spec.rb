@@ -73,7 +73,7 @@ RSpec.describe EmailAddressesController, type: :controller do
     context "with valid params" do
       let(:liza) {Person.create(first_name: "Saswati", last_name: "Priyadarshini")}
       let(:valid_attributes) {{address: "sasawti@gmail.com", person_id: liza.id}}
-      
+
       it "creates a new EmailAddress" do
         expect {
           post :create, {:email_address => valid_attributes}, valid_session
@@ -114,8 +114,11 @@ RSpec.describe EmailAddressesController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
+      let(:liza) {Person.create(first_name: "Saswati", last_name: "Priyadarshini")}
+      let(:valid_attributes) {{address: "haha@gmail.com", person_id: liza.id}}
+
       let(:new_attributes) {
-        {address: "tony.stark@avengers.com", person_id: 2}
+        {address: "tony.stark@avengers.com", person_id: liza.id}
       }
 
       it "updates the requested email_address" do
@@ -123,7 +126,7 @@ RSpec.describe EmailAddressesController, type: :controller do
         put :update, {:id => email_address.to_param, :email_address => new_attributes}, valid_session
         email_address.reload
         expect(email_address.address).to eq("tony.stark@avengers.com")
-        expect(email_address.person_id).to eq(2)
+        expect(email_address.person_id).to eq(liza.id)
       end
 
       it "assigns the requested email_address as @email_address" do
@@ -132,10 +135,15 @@ RSpec.describe EmailAddressesController, type: :controller do
         expect(assigns(:email_address)).to eq(email_address)
       end
 
-      it "redirects to the email_address" do
+      # it "redirects to the email_address" do
+      #   email_address = EmailAddress.create! valid_attributes
+      #   put :update, {:id => email_address.to_param, :email_address => valid_attributes}, valid_session
+      #   expect(response).to redirect_to(email_address)
+      # end
+      it 'redirects to email address\' person' do
         email_address = EmailAddress.create! valid_attributes
         put :update, {:id => email_address.to_param, :email_address => valid_attributes}, valid_session
-        expect(response).to redirect_to(email_address)
+        expect(response).to redirect_to(liza)
       end
     end
 
