@@ -16,6 +16,13 @@
 		<%= phone.number %><%= link_to "Edit", edit_phone_number_path(phone) %>&nbsp; <%= link_to "Delete", phone_number_path(phone), :method =>"delete" %><br />
 	<% end %>
 </p>
+
+<ul>
+	<strong>Email Addresses</strong>
+	<% @person.email_addresses.each do |email| %>
+		<li><%= email.address %></li>
+	<% end %>
+</ul>
 <%= link_to 'Add Phone Number', new_phone_number_path(person_id: @person.id) %>
 <%= link_to 'Edit', edit_person_path(@person) %> |
 <%= link_to 'Back', people_path %>
