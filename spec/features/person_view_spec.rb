@@ -132,4 +132,59 @@ describe 'the person view', type: :feature do
 			expect(page).to_not have_content(old_email)
 		end
 	end
+
+	describe "the note of a person", type: :feature do
+		let(:person) {Person.create(first_name: "Saswati", last_name: "Priyadarshini")}
+
+		before(:each) do
+			# person.note.create(body: "this is sample note")
+			note = Note.create(body: "This is a sample note.")
+			person.note = note
+			visit(person_path(person))
+		end
+
+		it 'shows the note only if there exists a note' do
+			expect(page).to have_content(person.note.body)
+		end
+
+		it 'shows add note button if there is no note' do
+			peter = Person.create(first_name: "Peter", last_name: "Sam")
+			visit(person_path(peter))
+			# expect(page).to_not have_content()
+			expect(page).to have_link('Add Note', href: new_note_path(person_id: peter.id))
+			page.click_link('Add Note')
+			page.fill_in('Body', with: "Sample Noty")
+			page.click_button('Create Note')
+			expect(current_path).to eq(person_path(peter))
+			expect(page).to have_content("Sample Noty")
+		end
+
+		it 'edits note when note is present' do
+			# peter = Person.create(first_name: "Peter", last_name: "Samwise")
+			# note = Note.create(body: "Samwise Gamsi")
+			# peter.note = note
+			note = person.note
+			old_note = note.body
+
+			expect(page).to have_link('Edit Note', edit_note_path(person.note))
+			# expect(page).to have_link('Delete Note', note_path(person.note))
+			page.click_link('Edit Note')
+			page.fill_in('Body', with: "All men must die!")
+			page.click_button('Update Note')
+			expect(current_path).to eq(person_path(person))
+			expect(page).to have_content("All men must die!")
+		end
+
+		it 'shows delete link and deletes note if present' do
+			expect(page).to have_link('Delete Note')
+			old_note = person.note.body
+			page.click_link('Delete Note')
+			expect(current_path).to eq(person_path(person))
+			expect(page).to have_link('Add Note')
+			expect(page).to_not have_content(old_note)
+
+
+		end
+
+	end
 end

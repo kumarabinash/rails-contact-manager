@@ -27,5 +27,13 @@
 </ul>
 <%= link_to 'Add Email Address', new_email_address_path(person_id: @person.id) %>
 <br />
+<p>
+<% if @person.note %>
+	<strong>Note</strong><br />
+	<%= @person.note.body %> &nbsp; <%= link_to 'Edit Note', edit_note_path(@person.note) %> &nbsp; <%= link_to "Delete Note", note_path(@person.note), method: 'delete' %>
+<% else %>
+	<%= link_to 'Add Note', new_note_path(person_id: @person.id) %>
+<% end %>
+</p>
 <%= link_to 'Edit', edit_person_path(@person) %> |
 <%= link_to 'Back', people_path %>
